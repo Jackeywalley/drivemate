@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,46 +5,58 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { useAuth, UserRole } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 import { Car, UserPlus, Sparkles } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import type { Database } from '@/lib/database.types';
+
+type UserRole = Database['public']['Tables']['profiles']['Row']['role'];
 
 const SignupForm: React.FC = () => {
+  const { signup } = useAuth();
+  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole>('client');
-  const { signup, isLoading } = useAuth();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [role, setRole] = useState<UserRole>('customer');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setIsLoading(true);
+
     if (password.length < 6) {
       toast({
-        title: "Password too short",
-        description: "Password must be at least 6 characters long.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Password must be at least 6 characters long',
+        variant: 'destructive',
       });
+      setIsLoading(false);
       return;
     }
 
-    const { error } = await signup(email, password, fullName, role);
+    const error = await signup(email, password, firstName, lastName, phoneNumber, role);
     
     if (error) {
       toast({
-        title: "Signup failed",
+        title: 'Error',
         description: error,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } else {
       toast({
-        title: "Account created successfully!",
-        description: "Please check your email to verify your account.",
+        title: 'Success',
+        description: 'Please check your email to confirm your account',
       });
       navigate('/login');
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -86,14 +97,42 @@ const SignupForm: React.FC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName" className="text-sm font-semibold">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Your first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className="border-border/40 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className="text-sm font-semibold">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Your last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    className="border-border/40 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-sm font-semibold">Full Name</Label>
+                <Label htmlFor="phoneNumber" className="text-sm font-semibold">Phone Number</Label>
                 <Input
-                  id="fullName"
-                  type="text"
-                  placeholder="Your full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="Your phone number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   required
                   className="border-border/40 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 />
@@ -127,14 +166,14 @@ const SignupForm: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="role" className="text-sm font-semibold">I want to</Label>
+                <Label htmlFor="role">I want to</Label>
                 <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
-                  <SelectTrigger className="border-border/40 bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/20 transition-all duration-300">
+                  <SelectTrigger>
                     <SelectValue placeholder="Select your role" />
                   </SelectTrigger>
-                  <SelectContent className="glass border-border/40">
-                    <SelectItem value="client">Book a chauffeur (Client)</SelectItem>
-                    <SelectItem value="chauffeur">Work as a chauffeur (Driver)</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="customer">Book a chauffeur (Customer)</SelectItem>
+                    <SelectItem value="driver">Work as a chauffeur (Driver)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
