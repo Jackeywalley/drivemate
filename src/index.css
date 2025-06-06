@@ -1,87 +1,86 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* DriveMate Design System - Unique gradient-based theme with dark/light mode */
+/* DriveMate Design System - High Contrast Theme */
 
 @layer base {
   :root {
-    /* Light mode - Gradient theme with purple/blue accent */
+    /* Light mode - High contrast dark text */
     --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --foreground: 224 71.4% 4.1%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 224 71.4% 4.1%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 224 71.4% 4.1%;
 
     --primary: 250 84% 54%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 250 20% 95%;
-    --secondary-foreground: 250 84% 54%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 224 71.4% 4.1%;
 
-    --muted: 250 20% 96%;
-    --muted-foreground: 220 16% 46%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
 
-    --accent: 250 20% 96%;
-    --accent-foreground: 250 84% 54%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 224 71.4% 4.1%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 250 20% 91%;
-    --input: 250 20% 91%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 250 84% 54%;
 
     --radius: 0.75rem;
 
-    /* Custom DriveMate gradient colors */
+    /* Enhanced gradient colors for light mode */
     --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-    --gradient-secondary: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
-    --gradient-accent: linear-gradient(135deg, #EDE9FE 0%, #DBEAFE 100%);
+    --gradient-secondary: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+    --gradient-accent: linear-gradient(135deg, #EEF2FF 0%, #EFF6FF 100%);
     --surface-elevated: 0 0% 98%;
-    --surface-hover: 250 20% 93%;
+    --surface-hover: 220 14.3% 95.9%;
   }
 
   .dark {
-    /* Dark mode - Rich dark theme with vibrant accents */
-    --background: 220 27% 8%;
-    --foreground: 250 20% 95%;
+    /* Dark mode - High contrast white text */
+    --background: 224 71.4% 4.1%;
+    --foreground: 0 0% 100%;
 
-    --card: 220 27% 10%;
-    --card-foreground: 250 20% 95%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 220 27% 10%;
-    --popover-foreground: 250 20% 95%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 250 84% 60%;
-    --primary-foreground: 220 27% 8%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 27% 15%;
-    --secondary-foreground: 250 20% 95%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 27% 15%;
-    --muted-foreground: 250 10% 60%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 220 27% 15%;
-    --accent-foreground: 250 20% 95%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 63% 50%;
-    --destructive-foreground: 250 20% 95%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 27% 20%;
-    --input: 220 27% 20%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
     --ring: 250 84% 60%;
 
-    /* Custom DriveMate dark gradient colors */
+    /* Enhanced gradient colors for dark mode */
     --gradient-primary: linear-gradient(135deg, #A855F7 0%, #3B82F6 100%);
-    --gradient-secondary: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+    --gradient-secondary: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
     --gradient-accent: linear-gradient(135deg, #312E81 0%, #1E3A8A 100%);
-    --surface-elevated: 220 27% 12%;
-    --surface-hover: 220 27% 18%;
+    --surface-elevated: 224 71.4% 6.1%;
+    --surface-hover: 215 27.9% 21.9%;
   }
 }
 
@@ -91,7 +90,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -99,61 +98,90 @@
   * {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
+
+  /* Enhanced text styles with high contrast */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply leading-7;
+  }
+
+  /* Improved link styles with high contrast */
+  a {
+    @apply text-primary hover:text-primary/90 transition-colors font-medium;
+  }
 }
 
 @layer utilities {
-  /* Gradient utilities */
+  /* Enhanced gradient utilities with high contrast text */
   .gradient-primary {
     background: var(--gradient-primary);
+    @apply text-white font-medium;
   }
   
   .gradient-secondary {
     background: var(--gradient-secondary);
+    @apply font-medium;
   }
   
   .gradient-accent {
     background: var(--gradient-accent);
+    @apply font-medium;
   }
 
-  /* Surface utilities */
+  /* Enhanced surface utilities with high contrast */
   .surface-elevated {
-    @apply bg-[hsl(var(--surface-elevated))];
+    @apply bg-[hsl(var(--surface-elevated))] shadow-sm font-medium;
   }
   
   .surface-hover {
-    @apply hover:bg-[hsl(var(--surface-hover))];
+    @apply hover:bg-[hsl(var(--surface-hover))] transition-colors font-medium;
   }
 
-  /* Glass morphism effect */
+  /* Enhanced glass morphism with high contrast */
   .glass {
-    @apply backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10;
+    @apply backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 shadow-lg font-medium;
   }
 
-  /* Unique card styles */
+  /* Enhanced card styles with high contrast */
   .card-gradient {
-    @apply bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20;
+    @apply bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 shadow-lg font-medium;
   }
 
   .card-elevated {
-    @apply bg-card border border-border shadow-lg shadow-primary/5 dark:shadow-primary/10;
+    @apply bg-card border border-border shadow-lg shadow-primary/5 dark:shadow-primary/10 font-medium;
   }
 
-  /* Text gradients */
+  /* Enhanced text gradients with high contrast */
   .text-gradient {
-    @apply bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent font-bold;
   }
 
-  /* Button effects */
+  /* Enhanced button effects with high contrast */
   .btn-gradient {
-    @apply bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-bold;
   }
 
   .btn-glass {
-    @apply glass hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-300;
+    @apply glass hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-300 font-bold;
   }
 }
 
-/* Custom scrollbar */
+/* Enhanced scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -163,14 +191,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+  @apply bg-border rounded-full hover:bg-primary/60 transition-colors;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-primary/60;
-}
-
-/* Loading animations */
+/* Enhanced loading animations */
 @keyframes shimmer {
   0% {
     background-position: -200px 0;

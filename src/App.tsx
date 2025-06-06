@@ -81,7 +81,7 @@ const App = () => (
                 } 
               />
               <Route 
-                path="/book" 
+                path="/book-ride" 
                 element={
                   <ProtectedRoute allowedRoles={['client', 'customer']}>
                     <BookRide />

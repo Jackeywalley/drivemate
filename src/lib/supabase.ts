@@ -69,4 +69,4 @@ export const updateDriverProfile = async (userId: string, updates: Partial<Datab
 
   if (error) throw error;
   return data;
-}; 
+};

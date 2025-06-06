@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -70,7 +69,7 @@ const Header: React.FC = () => {
             </Link>
             {profile?.role === 'client' && (
               <Link
-                to="/book"
+                to="/book-ride"
                 className="text-foreground/70 hover:text-foreground transition-colors duration-300 font-medium hover:scale-105 transform"
               >
                 Book Ride
@@ -106,44 +105,46 @@ const Header: React.FC = () => {
             
             <ThemeToggle />
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border/40 bg-background/50 backdrop-blur-sm hover:bg-accent/50 transition-all duration-300">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src={profile?.profile_image || ''} alt={profile?.full_name} />
-                    <AvatarFallback className="btn-gradient text-white font-semibold">
-                      {profile?.full_name ? getInitials(profile.full_name) : 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 glass border-border/40" align="end" forceMount>
-                <div className="flex flex-col space-y-2 p-4 border-b border-border/40">
-                  <p className="text-sm font-semibold leading-none">{profile?.full_name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {profile?.email}
-                  </p>
-                </div>
-                <DropdownMenuSeparator className="bg-border/40" />
-                <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
-                  <User className="mr-3 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
-                  <Calendar className="mr-3 h-4 w-4" />
-                  <span>My Bookings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
-                  <Settings className="mr-3 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-border/40" />
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer hover:bg-destructive/10 text-destructive transition-colors">
-                  <LogOut className="mr-3 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border/40 bg-background/50 backdrop-blur-sm hover:bg-accent/50 transition-all duration-300">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={profile?.profile_image || ''} alt={profile?.full_name} />
+                      <AvatarFallback className="btn-gradient text-white font-semibold">
+                        {profile?.full_name ? getInitials(profile.full_name) : 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-64 glass border-border/40" align="end" forceMount>
+                  <div className="flex flex-col space-y-2 p-4 border-b border-border/40">
+                    <p className="text-sm font-semibold leading-none">{profile?.full_name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {profile?.email}
+                    </p>
+                  </div>
+                  <DropdownMenuSeparator className="bg-border/40" />
+                  <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
+                    <User className="mr-3 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
+                    <Calendar className="mr-3 h-4 w-4" />
+                    <span>My Bookings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer hover:bg-accent/50 transition-colors">
+                    <Settings className="mr-3 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border/40" />
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer hover:bg-destructive/10 text-destructive transition-colors">
+                    <LogOut className="mr-3 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </div>
