@@ -53,17 +53,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Custom DriveMate colors
-				navy: {
-					DEFAULT: 'hsl(210, 100%, 25%)',
-					light: 'hsl(210, 100%, 35%)',
-					dark: 'hsl(210, 100%, 15%)',
-				},
-				silver: {
-					DEFAULT: 'hsl(210, 8%, 85%)',
-					light: 'hsl(210, 8%, 92%)',
-					dark: 'hsl(210, 8%, 75%)',
-				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -104,13 +93,35 @@ export default {
 					to: {
 						transform: 'translateX(0)'
 					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'glow': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.5'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
-				'slide-in-right': 'slide-in-right 0.3s ease-out'
+				'slide-in-right': 'slide-in-right 0.3s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'glow': 'glow 2s ease-in-out infinite alternate'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
 			}
 		}
 	},
