@@ -48,8 +48,14 @@ const mockActiveRide = {
   estimatedEarning: 32.00
 };
 
+// Mock chauffeur data
+const mockChauffeurData = {
+  rating: 4.8,
+  totalRides: 127
+};
+
 const ChauffeurDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [isOnline, setIsOnline] = useState(true);
   const [hasActiveRide, setHasActiveRide] = useState(true);
 
@@ -76,7 +82,7 @@ const ChauffeurDashboard: React.FC = () => {
         <div className="mb-8">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.fullName}!</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Welcome, {profile?.full_name}!</h1>
               <p className="text-muted-foreground">Ready to start earning? Toggle your availability below.</p>
             </div>
             <div className="flex items-center space-x-3">
@@ -129,7 +135,7 @@ const ChauffeurDashboard: React.FC = () => {
                 <Star className="h-8 w-8 text-yellow-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-muted-foreground">Rating</p>
-                  <p className="text-2xl font-bold text-yellow-500">{user?.rating || '4.8'}</p>
+                  <p className="text-2xl font-bold text-yellow-500">{mockChauffeurData.rating}</p>
                 </div>
               </div>
             </CardContent>
@@ -141,7 +147,7 @@ const ChauffeurDashboard: React.FC = () => {
                 <Car className="h-8 w-8 text-navy" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-muted-foreground">Total Rides</p>
-                  <p className="text-2xl font-bold text-navy">{user?.totalRides || 127}</p>
+                  <p className="text-2xl font-bold text-navy">{mockChauffeurData.totalRides}</p>
                 </div>
               </div>
             </CardContent>
@@ -299,13 +305,13 @@ const ChauffeurDashboard: React.FC = () => {
                   <hr className="border-silver" />
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Total Rides</span>
-                    <span className="font-bold">{user?.totalRides || 127}</span>
+                    <span className="font-bold">{mockChauffeurData.totalRides}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Average Rating</span>
                     <div className="flex items-center space-x-1">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="font-bold">{user?.rating || '4.8'}</span>
+                      <span className="font-bold">{mockChauffeurData.rating}</span>
                     </div>
                   </div>
                 </div>
