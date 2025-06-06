@@ -1,135 +1,165 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
+import type { Database } from '@/integrations/supabase/types';
 
 export type UserRole = 'client' | 'chauffeur' | 'admin';
 
-export interface User {
+export interface Profile {
   id: string;
   email: string;
-  fullName: string;
-  phone: string;
+  full_name: string;
+  phone: string | null;
   role: UserRole;
-  isVerified?: boolean;
-  profileImage?: string;
-  licenseNumber?: string;
-  rating?: number;
-  totalRides?: number;
+  profile_image: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (userData: Omit<User, 'id'> & { password: string }) => Promise<boolean>;
-  logout: () => void;
+  profile: Profile | null;
+  session: Session | null;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
+  signup: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error?: string }>;
+  logout: () => Promise<void>;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock data for demonstration
-const mockUsers: (User & { password: string })[] = [
-  {
-    id: '1',
-    email: 'client@drivemate.com',
-    password: 'password123',
-    fullName: 'John Doe',
-    phone: '+1234567890',
-    role: 'client',
-    isVerified: true,
-    totalRides: 15
-  },
-  {
-    id: '2',
-    email: 'driver@drivemate.com',
-    password: 'password123',
-    fullName: 'Sarah Johnson',
-    phone: '+1234567891',
-    role: 'chauffeur',
-    isVerified: true,
-    licenseNumber: 'DL123456789',
-    rating: 4.8,
-    totalRides: 127
-  },
-  {
-    id: '3',
-    email: 'admin@drivemate.com',
-    password: 'password123',
-    fullName: 'Admin User',
-    phone: '+1234567892',
-    role: 'admin',
-    isVerified: true
-  }
-];
-
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check for saved user on app start
-    const savedUser = localStorage.getItem('drivemate_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
     }
-    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session);
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        } else {
+          setProfile(null);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+      
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ error?: string }> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const foundUser = mockUsers.find(u => u.email === email && u.password === password);
-    
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('drivemate_user', JSON.stringify(userWithoutPassword));
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setIsLoading(false);
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
       setIsLoading(false);
-      return true;
+      return { error: 'An unexpected error occurred' };
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
-  const signup = async (userData: Omit<User, 'id'> & { password: string }): Promise<boolean> => {
+  const signup = async (
+    email: string, 
+    password: string, 
+    fullName: string, 
+    role: UserRole
+  ): Promise<{ error?: string }> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if user already exists
-    const existingUser = mockUsers.find(u => u.email === userData.email);
-    if (existingUser) {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            role: role,
+          },
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (error) {
+        setIsLoading(false);
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
       setIsLoading(false);
-      return false;
+      return { error: 'An unexpected error occurred' };
     }
-    
-    const newUser: User = {
-      id: Date.now().toString(),
-      email: userData.email,
-      fullName: userData.fullName,
-      phone: userData.phone,
-      role: userData.role,
-      isVerified: userData.role === 'client',
-      totalRides: 0
-    };
-    
-    setUser(newUser);
-    localStorage.setItem('drivemate_user', JSON.stringify(newUser));
-    setIsLoading(false);
-    return true;
   };
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
+    setIsLoading(true);
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem('drivemate_user');
+    setProfile(null);
+    setSession(null);
+    setIsLoading(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      profile, 
+      session, 
+      login, 
+      signup, 
+      logout, 
+      isLoading 
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -18,20 +18,20 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const success = await login(email, password);
+    const { error } = await login(email, password);
     
-    if (success) {
+    if (error) {
+      toast({
+        title: "Login failed",
+        description: error,
+        variant: "destructive",
+      });
+    } else {
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
       });
       navigate('/dashboard');
-    } else {
-      toast({
-        title: "Login failed",
-        description: "Invalid email or password. Please try again.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -111,16 +111,6 @@ const LoginForm: React.FC = () => {
                   Sign up
                 </Link>
               </p>
-            </div>
-
-            {/* Demo credentials */}
-            <div className="mt-6 p-4 bg-silver-light rounded-lg">
-              <p className="text-xs font-medium text-gray-600 mb-2">Demo Credentials:</p>
-              <div className="text-xs text-gray-500 space-y-1">
-                <p><strong>Client:</strong> client@drivemate.com / password123</p>
-                <p><strong>Driver:</strong> driver@drivemate.com / password123</p>
-                <p><strong>Admin:</strong> admin@drivemate.com / password123</p>
-              </div>
             </div>
           </CardContent>
         </Card>

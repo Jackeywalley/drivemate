@@ -8,7 +8,7 @@ import ChauffeurDashboard from '@/components/dashboard/ChauffeurDashboard';
 import AdminDashboard from '@/components/dashboard/AdminDashboard';
 
 const Dashboard: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const { user, profile, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -21,12 +21,12 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (!user) {
+  if (!user || !profile) {
     return <Navigate to="/login" replace />;
   }
 
   const renderDashboard = () => {
-    switch (user.role) {
+    switch (profile.role) {
       case 'client':
         return <ClientDashboard />;
       case 'chauffeur':
